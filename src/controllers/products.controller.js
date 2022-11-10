@@ -3,7 +3,7 @@ const Product = require('../models/product')
 
 const productsCtrl = { };
 
-productsCtrl.create = async (req, res, next) => {
+productsCtrl.createProduct = async (req, res, next) => {
    if(req.user.username != req.body.username)
    {
         return res.status(401).send('you cannot create products with a different username than yours')
@@ -29,7 +29,7 @@ productsCtrl.create = async (req, res, next) => {
     })
 }
 
-productsCtrl.index = (req, res , next) => {
+productsCtrl.indexProduct = (req, res , next) => {
     Product.find({username: req.user.username}, (err, products) => {
         if (err)
             return next(err)
@@ -37,7 +37,7 @@ productsCtrl.index = (req, res , next) => {
     })
 }
 
-productsCtrl.show = (req, res , next) => {
+productsCtrl.showProduct = (req, res , next) => {
     Product.findById(req.params.id, (err, product) => {
         if (err)
             return next(err)
@@ -49,7 +49,7 @@ productsCtrl.show = (req, res , next) => {
     })
 }
 
-productsCtrl.update = (req, res , next) => {
+productsCtrl.updateProduct = (req, res , next) => {
     
     Product.findById(req.params.id, (err, product) => {
         if (err)
@@ -67,7 +67,7 @@ productsCtrl.update = (req, res , next) => {
     
 }
 
-productsCtrl.delete = (req, res , next) => {
+productsCtrl.deleteProduct = (req, res , next) => {
     Product.findById(req.params.id, (err, product) => {
         if (err)
             return next(err)

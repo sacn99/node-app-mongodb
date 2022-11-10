@@ -1,7 +1,7 @@
 const {Routes} = require('express')
 const router = Router()
 
-const { showProduct, createProduct, updateProduct, deleteProduct } = require('../controllers/notes.controller');
+const { showProduct, createProduct, updateProduct, deleteProduct } = require('../controllers/products.controller');
 
 router.get('/:id', auth, showProduct)
 
