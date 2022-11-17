@@ -1,4 +1,3 @@
-const { number, boolean } = require('joi')
 const {Schema, model} = require('mongoose')
 
 

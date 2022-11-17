@@ -1,11 +1,8 @@
 const User = require('../models/user')
-const bcrypt = require('bcrypt')
+const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 
-const usersCtrl = {};
-
-usersCtrl.loginUser = async (req, res, next) => {
-
+exports.userLogin = async (req, res, next) => {
     const { username, password } = req.body
 
     if(!username || !password){
@@ -14,9 +11,8 @@ usersCtrl.loginUser = async (req, res, next) => {
 
     const user = await User.findOne({username});
 
-    
     if(user && await bcrypt.compare(password, user.password)){
-        const token = jwt.sign( {user_id: user._id, username}, process.env.TOKENSECRET, {expiresIn: "2h"} );
+        const token = jwt.sign( {user_id: user._id, username}, process.env.SECRETTOKEN, {expiresIn: "2h"} );
             
         user.token = token;
 
@@ -25,10 +21,10 @@ usersCtrl.loginUser = async (req, res, next) => {
     }else{
         res.status(400).send("Invalid credentials");
     }
-}
+};
 
-usersCtrl.createUser = async (req, res, next) => {
-   
+exports.userCreate = async (req, res, next) => {
+
     const userExist = await User.findOne({username: req.body.username});
 
     if(userExist){
@@ -46,7 +42,6 @@ usersCtrl.createUser = async (req, res, next) => {
         active: req.body.active,
     })
 
-   
     user.save(err => {
         if(err)
             return next(err)
@@ -54,7 +49,7 @@ usersCtrl.createUser = async (req, res, next) => {
     })
 }
 
-usersCtrl.indexUser = (req, res , next) => {
+exports.userIndex = (req, res , next) => {
     User.find({}, (err, users) => {
         if (err)
             return next(err)
@@ -62,7 +57,7 @@ usersCtrl.indexUser = (req, res , next) => {
     })
 }
 
-usersCtrl.showUser = (req, res , next) => {
+exports.userShow = (req, res , next) => {
     User.findById(req.params.id, (err, user) => {
         if (err)
             return next(err)
@@ -70,18 +65,17 @@ usersCtrl.showUser = (req, res , next) => {
     })
 }
 
-usersCtrl.updateUser = async (req, res , next) => {
-    if(req.user.user_id != req.params.id){
+exports.userUpdate = async (req, res , next) => {
+    /*if(req._id != req.params.id){
         return res.status(401).send('You cannot update other users, only yourself')
-    }
+    }*/
     let encryptedPassword = await bcrypt.hash(req.body.password, 10);
     let userToEdit = {
-        firstname: req.body.firstname,
-        lastname: req.body.lastname,
+        name: req.body.name,
+        email: req.body.email,
         username: req.body.username,
         password: encryptedPassword,
         identification: req.body.identification,
-        photo: req.body.photo,
         active: req.body.active
     }
     User.findByIdAndUpdate(req.params.id, {$set: userToEdit}, (err, user) => {
@@ -91,15 +85,13 @@ usersCtrl.updateUser = async (req, res , next) => {
     })
 }
 
-usersCtrl.deleteUser = (req, res , next) => {
-    if(req.user.user_id != req.params.id){
+exports.userDelete = (req, res , next) => {
+    /*if(req.user.user_id != req.params.id){
         return res.status(401).send('You cannot delete other users, only yourself')
-    }
+    }*/
         User.findByIdAndRemove(req.params.id, (err, user) => {
             if (err)
                 return next(err)
             res.send('User deleted successfully')
         })
-    
-    
 }

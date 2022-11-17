@@ -28,7 +28,12 @@ app.use(cookieParser());
 //Global Variablesimage
 
 //Routes
-app.use(require('./routes/index.routes'));
+console.log(require('./routes/index.routes'))
+
+app.use([require('./routes/index.routes'),
+require('./routes/users.routes'),
+require('./routes/products.routes')
+])
 
 //Static Files
 app.use(express.static(path.join(__dirname, 'public')))
@@ -37,16 +42,16 @@ app.use(function(req, res, next) {
     next(createError(404));
   });
   
-  // error handler
-  app.use(function(err, req, res, next) {
-    // set locals, only providing error in development
-    res.locals.message = err.message;
-    res.locals.error = req.app.get('env') === 'development' ? err : {};
-  
-    // render the error page
-    res.status(err.status || 500);
-    //res.render('error');
-    res.send({status:"error", message:err.message, error:error})
-  });
+// error handler
+app.use(function(err, req, res, next) {
+  // set locals, only providing error in development
+  res.locals.message = err.message;
+  res.locals.error = req.app.get('env') === 'development' ? err : {};
+
+  // render the error page
+  res.status(err.status || 500);
+  //res.render('error');
+  res.send({status:"error", message:err.message, error:err})
+});
 
 module.exports = app;

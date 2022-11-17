@@ -1,21 +1,17 @@
-const {Routes} = require('express')
+const {Router} = require('express')
 const router = Router()
-const validate = require('../helpers/validate')
-const auth = require('../helpers/auth')
+const userCtrl = require('../controllers/users.controller')
 
-/*
-const { showUser, indexUser, createUser, loginUser, updateUser, deleteUser } = require('../controllers/users.controller');
+router.post('/api/register', userCtrl.userCreate);
 
-router.get('/:id', showUser)
+router.post('/api/login', userCtrl.userLogin);
 
-router.get('/', indexUser)
+router.get('/api/index', userCtrl.userIndex);
 
-router.post('/register', validate(schemas.user), createUser)
+router.get('/api/:id', userCtrl.userShow);
 
-router.post('/login', loginUser)
+router.put('/api/:id', userCtrl.userUpdate);
 
-router.put('/:id', auth,validate(schemas.user), updateUser)
+router.delete('/:id', userCtrl.userDelete);
 
-router.delete('/:id', auth, deleteUser)
-*/
 module.exports = router;

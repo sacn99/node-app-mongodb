@@ -1,9 +1,7 @@
 const User = require('../models/user')
 const Product = require('../models/product')
 
-const productsCtrl = { };
-
-productsCtrl.createProduct = async (req, res, next) => {
+exports.createProduct = async (req, res, next) => {
    if(req.user.username != req.body.username)
    {
         return res.status(401).send('you cannot create products with a different username than yours')
@@ -29,7 +27,7 @@ productsCtrl.createProduct = async (req, res, next) => {
     })
 }
 
-productsCtrl.indexProduct = (req, res , next) => {
+exports.indexProduct = (req, res , next) => {
     Product.find({username: req.user.username}, (err, products) => {
         if (err)
             return next(err)
@@ -37,7 +35,7 @@ productsCtrl.indexProduct = (req, res , next) => {
     })
 }
 
-productsCtrl.showProduct = (req, res , next) => {
+exports.showProduct = (req, res , next) => {
     Product.findById(req.params.id, (err, product) => {
         if (err)
             return next(err)
@@ -49,7 +47,7 @@ productsCtrl.showProduct = (req, res , next) => {
     })
 }
 
-productsCtrl.updateProduct = (req, res , next) => {
+exports.updateProduct = (req, res , next) => {
     
     Product.findById(req.params.id, (err, product) => {
         if (err)
@@ -67,7 +65,7 @@ productsCtrl.updateProduct = (req, res , next) => {
     
 }
 
-productsCtrl.deleteProduct = (req, res , next) => {
+exports.deleteProduct = (req, res , next) => {
     Product.findById(req.params.id, (err, product) => {
         if (err)
             return next(err)
@@ -83,5 +81,3 @@ productsCtrl.deleteProduct = (req, res , next) => {
     })
     
 }
-
-module.exports = productsCtrl;
